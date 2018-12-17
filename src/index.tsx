@@ -1,10 +1,10 @@
 /**
- * @class ExampleComponent
+ * @class Carousel
  */
 
 import * as React from 'react'
 
-// import { number } from 'prop-types';
+import * as PropTypes from 'prop-types'
 import { tweenFunction } from './animation/index'
 import IndicatorDot from './component/Dot'
 import { Frame } from './component/Frame'
@@ -22,6 +22,18 @@ const MISOPERATION_TIME_PERCENTAGE = THRESHOLD_PERCENTAGE * 2
 
 export default class Carousel extends React.Component<Props, State> {
   public static defaultProps = new Props()
+  public static PropTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+    speed: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    animation: PropTypes.string.isRequired,
+    isAuto: PropTypes.bool.isRequired,
+    autoPlayInterval: PropTypes.number.isRequired,
+    afterChange: PropTypes.func,
+    beforeChange: PropTypes.func,
+    selesctedColor: PropTypes.string,
+    showDots: PropTypes.bool.isRequired,
+  }
 
   private frameRef: React.RefObject<HTMLDivElement> = React.createRef()
   private rafId: number | null
