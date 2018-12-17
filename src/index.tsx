@@ -2,9 +2,9 @@
  * @class Carousel
  */
 
+import * as PropTypes from 'prop-types'
 import * as React from 'react'
 
-import * as PropTypes from 'prop-types'
 import { tweenFunction } from './animation/index'
 import IndicatorDot from './component/Dot'
 import { Frame } from './component/Frame'
@@ -49,10 +49,13 @@ export default class Carousel extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
+    // 设置轮播区域的尺寸
     this.setSize()
+    // 开启自动播放
     this.setState(() => {
       this.props.isAuto && this.autoPlay()
     })
+    // 监听 document,如果处于隐藏状态,那么取消定时器
     document.addEventListener('visibilitychange', () => {
       const isHidden = document.hidden
       if (isHidden) {
@@ -66,7 +69,6 @@ export default class Carousel extends React.Component<Props, State> {
   public componentWillUnmount() {
     cancelAnimationFrame(this.rafId!)
     this.rafId = null
-    window.removeEventListener('resize', this.handleResize)
     clearInterval(this.autoPlayTimer)
   }
 
@@ -82,6 +84,18 @@ export default class Carousel extends React.Component<Props, State> {
     )
   }
 
+  /**
+   * 渲染提示点
+   *
+   * @private
+   * @param {number} total
+   * @param {number} width
+   * @param {number} currentIndex
+   * @param {string} selesctedColor
+   * @param {React.ReactNode[]} slideItems
+   * @returns
+   * @memberof Carousel
+   */
   private renderDots(
     total: number,
     width: number,
@@ -100,6 +114,12 @@ export default class Carousel extends React.Component<Props, State> {
     return React.createElement(IndicatorDot, { ...dotProps })
   }
 
+  /**
+   * 自动播放
+   *
+   * @private
+   * @memberof Carousel
+   */
   private autoPlay() {
     if (this.autoPlayTimer) {
       clearInterval(this.autoPlayTimer)
@@ -110,16 +130,10 @@ export default class Carousel extends React.Component<Props, State> {
     this.autoPlayTimer = setInterval(() => this.handleSwipe('left'), autoPlayInterval)
   }
 
-  private handleResize() {
-    const width = window.innerWidth
-    const { total, currentIndex } = this.state
-    this.setState({
-      slideItemWidth: width,
-      slideListWidth: total * width,
-      translateX: -width * currentIndex,
-    })
-  }
-
+  /**
+   * 设置轮播区域尺寸
+   * @param x
+   */
   private setSize(x?: number) {
     const { width } = this.frameRef.current!.getBoundingClientRect()
     const len = React.Children.count(this.props.children)
@@ -134,6 +148,13 @@ export default class Carousel extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * 渲染轮播主区域
+   *
+   * @private
+   * @returns SlideList
+   * @memberof Carousel
+   */
   private renderSildeList() {
     const { children, height } = this.props
     const len = React.Children.count(children)
@@ -178,6 +199,13 @@ export default class Carousel extends React.Component<Props, State> {
     )
   }
 
+  /**
+   * 处理触摸起始时的事件
+   *
+   * @private
+   * @param {React.TouchEvent} e
+   * @memberof Carousel
+   */
   private onTouchStart(e: React.TouchEvent) {
     clearInterval(this.autoPlayTimer)
     const { x } = getPosition(e)
@@ -187,6 +215,13 @@ export default class Carousel extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * 当触摸滑动时处理事件
+   *
+   * @private
+   * @param {React.TouchEvent} e
+   * @memberof Carousel
+   */
   private onTouchMove(e: React.TouchEvent) {
     const { slideItemWidth, currentIndex, startPositionX } = this.state
     const { x } = getPosition(e)
@@ -201,6 +236,12 @@ export default class Carousel extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * 滑动结束处理的事件
+   *
+   * @private
+   * @memberof Carousel
+   */
   private onTouchEnd() {
     this.autoPlay()
     const { moveDeltaX, slideItemWidth, direction } = this.state
@@ -214,6 +255,12 @@ export default class Carousel extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * 图片轮播
+   *
+   * @private
+   * @memberof Carousel
+   */
   private handleSwipe = (direction: Direction) => {
     const { children, speed } = this.props
     const { slideItemWidth, currentIndex, translateX } = this.state
@@ -236,6 +283,12 @@ export default class Carousel extends React.Component<Props, State> {
     this.props.afterChange && this.props.afterChange()
   }
 
+  /**
+   * 轮播失败,返回原地
+   *
+   * @private
+   * @memberof Carousel
+   */
   private handleMisoperation() {
     const { speed } = this.props
     const { slideItemWidth, currentIndex, translateX } = this.state
@@ -245,16 +298,34 @@ export default class Carousel extends React.Component<Props, State> {
     this.rafId = requestAnimationFrame(() => this.animation(tweenQueue, currentIndex))
   }
 
+  /**
+   * 获取动画轨迹的数组
+   *
+   * @private
+   * @param {number} beginValue
+   * @param {number} endValue
+   * @param {number} speed
+   * @returns
+   * @memberof Carousel
+   */
   private getTweenQueue(beginValue: number, endValue: number, speed: number) {
     const { animation } = this.props
     const tweenQueue = []
     const updateTimes = speed / UPDATE_INTERVAL
-    for (let i = 0; i < updateTimes; i += 1) {
-      tweenQueue.push(tweenFunction[animation](UPDATE_INTERVAL * i, beginValue, endValue, speed))
+    for (let i = 0; i < updateTimes; i++) {
+      tweenQueue.push(tweenFunction[animation](UPDATE_INTERVAL * i, beginValue, endValue, speed) as number)
     }
     return tweenQueue
   }
 
+  /**
+   * 递归调用,根据轨迹运动
+   *
+   * @private
+   * @param {number[]} tweenQueue
+   * @param {number} newIndex
+   * @memberof Carousel
+   */
   private animation(tweenQueue: number[], newIndex: number) {
     if (tweenQueue.length < 1) {
       this.handleOperationEnd(newIndex)
@@ -267,6 +338,13 @@ export default class Carousel extends React.Component<Props, State> {
     this.rafId = requestAnimationFrame(() => this.animation(tweenQueue, newIndex))
   }
 
+  /**
+   * 动画最后一步,归位
+   *
+   * @private
+   * @param {number} newIndex
+   * @memberof Carousel
+   */
   private handleOperationEnd(newIndex: number) {
     const { slideItemWidth } = this.state
 
