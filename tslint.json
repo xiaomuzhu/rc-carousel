@@ -6,5 +6,13 @@
       "node_modules/**/*.ts",
       "coverage/**/*.js"
     ]
-  }
+  },
+  "rules": {
+    "no-console": false,
+    "no-conditional-assignment":false,
+    "variable-name":false,
+    "object-literal-sort-keys":false,
+    "interface-name":false,
+    "no-unused-expression": [true, "allow-fast-null-checks"]
+}
 }

@@ -16,18 +16,18 @@ export default {
       format: 'cjs',
       exports: 'named',
       sourcemap: true,
-      
+
       globals: { "styled-components": "styled" }
-      
+
     },
     {
       file: pkg.module,
       format: 'es',
       exports: 'named',
       sourcemap: true,
-      
+
       globals: { "styled-components": "styled" }
-      
+
     },
   ],
   external: ["react", "react-dom", "prop-types", "styled-components"],
@@ -43,13 +43,13 @@ export default {
       rollupCommonJSResolveHack: true,
       clean: true,
     }),
-    
+
     commonjs({
       include: "node_modules/**",
       namedExports: {
         "node_modules/react-is/index.js": ["isValidElementType"]
       }
     }),
-    
+
   ],
 }
