@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`it works Frame 1`] = `
+.c0 {
+  display: block;
+  width: 100vw;
+  height: 200px;
+  overflow: hidden;
+  background: grey;
+  position: relative;
+}
+
+<div
+  class="c0"
+  height="200"
+/>
+`;
+
+exports[`it works SlideItem 1`] = `
+.c0 {
+  display: inline-block;
+  height: 100%;
+  width: 200px;
+}
+
+<div
+  class="c0"
+  width="200"
+/>
+`;
+
+exports[`it works SlideList 1`] = `
+.c1 {
+  display: inline-block;
+  height: 100%;
+  width: 200px;
+}
+
+.c0 {
+  display: block;
+  height: 100%;
+  position: relative;
+}
+
+<div
+  class="c0"
+  style="width:2000px;transform:translateX(200px)"
+  width="2000"
+>
+  <div
+    class="c1"
+    width="200"
+  />
+</div>
+`;

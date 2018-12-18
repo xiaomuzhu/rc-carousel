@@ -73,18 +73,13 @@ export default class Carousel extends React.Component<Props, State> {
   }
 
   public render() {
-    const { children, height, selesctedColor, showDots } = this.props
+    const { height, selesctedColor, showDots } = this.props
     const { total, currentIndex, slideItemWidth } = this.state
-
-    const dotChildren = total - 2 > 1 ? children : [children]
 
     return (
       <Frame ref={this.frameRef} height={height}>
         {this.renderSildeList()}
-        {showDots &&
-          this.renderDots(total - 2, slideItemWidth, currentIndex, selesctedColor, dotChildren as Array<
-            React.ReactElement<any>
-          >)}
+        {showDots && this.renderDots(total, slideItemWidth, currentIndex, selesctedColor)}
       </Frame>
     )
   }
@@ -101,18 +96,11 @@ export default class Carousel extends React.Component<Props, State> {
    * @returns
    * @memberof Carousel
    */
-  private renderDots(
-    total: number,
-    width: number,
-    currentIndex: number,
-    selesctedColor: string,
-    slideItems: React.ReactNode[]
-  ) {
+  private renderDots(total: number, width: number, currentIndex: number, selesctedColor: string) {
     const dotProps = {
       total,
       width,
       currentIndex,
-      slideItems,
       selesctedColor,
     }
 

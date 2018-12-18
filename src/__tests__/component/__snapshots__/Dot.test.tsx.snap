@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`it works Dots 1`] = `
+.c1 {
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.15rem;
+  background-color: red;
+  margin: 0.3rem 0.15rem;
+  opacity: 1;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.c2 {
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.15rem;
+  background-color: grey;
+  margin: 0.3rem 0.15rem;
+  opacity: 0.3;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.c0 {
+  position: absolute;
+  width: 200px;
+  z-index: 100;
+  bottom: 0.1rem;
+  text-align: center;
+  background-color: transparent;
+}
+
+<div
+  class="c0"
+  width="200"
+>
+  <span
+    class="c1"
+    selected=""
+  />
+  <span
+    class="c2"
+  />
+  <span
+    class="c2"
+  />
+</div>
+`;

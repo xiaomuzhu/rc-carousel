@@ -21,24 +21,24 @@ export const WrapperDot = styledComponents.default('div')<{ width: number }>`
   background-color: transparent
 `
 
-const IndicatorDot: React.SFC<{
-  total: number
-  currentIndex: number
-  width: number
-  selesctedColor: string
-  slideItems: React.ReactNode[] | React.ReactElement<any>
-}> = ({ total, currentIndex, width, selesctedColor, slideItems }) => {
-  if (total < 2) {
+const IndicatorDot: React.SFC<{ total: number; currentIndex: number; width: number; selesctedColor: string }> = ({
+  total,
+  currentIndex,
+  width,
+  selesctedColor,
+}) => {
+  if (total === undefined || total < 4) {
     return <Dot selected={true} />
   } else {
+    const len = total - 2
+    const arr = Array.from(new Array(len).keys())
     return (
       <WrapperDot width={width}>
-        {(slideItems as React.ReactNode[]).map((dot, i) => {
+        {arr.map((dot, i) => {
           return <Dot selesctedColor={selesctedColor} selected={i === currentIndex - 1} key={i} />
         })}
       </WrapperDot>
     )
   }
 }
-
 export default IndicatorDot
