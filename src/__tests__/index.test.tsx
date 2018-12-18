@@ -1,26 +1,26 @@
-import { configure, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import * as Adapter from 'enzyme-adapter-react-16'
 import * as React from 'react'
-import ExampleComponent from '../'
+import Carousel from '../'
 
 configure({ adapter: new Adapter() })
 
 const setup = () => {
-  const wrapper = shallow(<ExampleComponent text="Text" />)
+  const wrapper = mount(
+    <Carousel>
+      <div>Carousel Test</div>
+    </Carousel>
+  )
 
   return {
     wrapper,
   }
 }
 
-describe('ExampleComponent', () => {
+describe('Carousel', () => {
   const { wrapper } = setup()
 
-  it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
-  })
-
-  it('ExampleComponent should render Text', () => {
-    expect(wrapper.text()).toEqual('Example Component: Text')
+  it('should render', () => {
+    expect(wrapper.contains('Carousel Test')).toBeTruthy()
   })
 })

@@ -1,5 +1,5 @@
 export default class Props {
-  public children: Array<React.ReactElement<any>> | never[] = []
+  public children: Array<React.ReactElement<any>> | React.ReactElement<any> | never[] = []
   public speed: number = 500
   public height: number = 160
   public animation: string = 'easeInOutQuad'

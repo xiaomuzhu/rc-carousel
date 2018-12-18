@@ -26,7 +26,7 @@ const IndicatorDot: React.SFC<{
   currentIndex: number
   width: number
   selesctedColor: string
-  slideItems: React.ReactNode[]
+  slideItems: React.ReactNode[] | React.ReactElement<any>
 }> = ({ total, currentIndex, width, selesctedColor, slideItems }) => {
   if (total < 2) {
     return <Dot selected={true} />

@@ -22,7 +22,7 @@ const MISOPERATION_TIME_PERCENTAGE = THRESHOLD_PERCENTAGE * 2
 
 export default class Carousel extends React.Component<Props, State> {
   public static defaultProps = new Props()
-  public static PropTypes = {
+  public static propTypes = {
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
     speed: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
@@ -76,10 +76,15 @@ export default class Carousel extends React.Component<Props, State> {
     const { children, height, selesctedColor, showDots } = this.props
     const { total, currentIndex, slideItemWidth } = this.state
 
+    const dotChildren = total - 2 > 1 ? children : [children]
+
     return (
       <Frame ref={this.frameRef} height={height}>
         {this.renderSildeList()}
-        {showDots && this.renderDots(total - 2, slideItemWidth, currentIndex, selesctedColor, children)}
+        {showDots &&
+          this.renderDots(total - 2, slideItemWidth, currentIndex, selesctedColor, dotChildren as Array<
+            React.ReactElement<any>
+          >)}
       </Frame>
     )
   }
@@ -135,6 +140,8 @@ export default class Carousel extends React.Component<Props, State> {
    * @param x
    */
   private setSize(x?: number) {
+    console.log(this.frameRef.current, '~~~~~~~~')
+
     const { width } = this.frameRef.current!.getBoundingClientRect()
     const len = React.Children.count(this.props.children)
     const total = len + 2
@@ -170,13 +177,23 @@ export default class Carousel extends React.Component<Props, State> {
       width: slideItemWidth,
     }
 
-    const firstElement = children[0]
-    const lastElement = children[len - 1]
-
     const slideListProps = {
       translateX,
       width: slideListWidth,
     }
+
+    if (len === 1) {
+      return (
+        <SlideList {...slideListProps}>
+          <SlideItem width={slideItemWidth}>
+            {React.cloneElement(children as React.ReactElement<any>, slideItemSize)}
+          </SlideItem>
+        </SlideList>
+      )
+    }
+
+    const firstElement = children[0]
+    const lastElement = children[len - 1]
 
     return (
       <SlideList {...slideListProps}>
@@ -264,7 +281,7 @@ export default class Carousel extends React.Component<Props, State> {
   private handleSwipe = (direction: Direction) => {
     const { children, speed } = this.props
     const { slideItemWidth, currentIndex, translateX } = this.state
-    const count = children.length
+    const count = React.Children.count(children)
 
     this.props.beforeChange && this.props.beforeChange()
 
