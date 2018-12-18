@@ -53,7 +53,7 @@ export default class Carousel extends React.Component<Props, State> {
     this.setSize()
     // 开启自动播放
     this.setState(() => {
-      this.props.isAuto && this.autoPlay()
+      this.shouldAutoPlay && this.autoPlay()
     })
     // 监听 document,如果处于隐藏状态,那么取消定时器
     document.addEventListener('visibilitychange', () => {
@@ -61,7 +61,7 @@ export default class Carousel extends React.Component<Props, State> {
       if (isHidden) {
         clearInterval(this.autoPlayTimer)
       } else {
-        this.autoPlay()
+        this.shouldAutoPlay && this.autoPlay()
       }
     })
   }
@@ -119,6 +119,13 @@ export default class Carousel extends React.Component<Props, State> {
     return React.createElement(IndicatorDot, { ...dotProps })
   }
 
+  private shouldAutoPlay() {
+    const { total } = this.state
+    const { isAuto } = this.props
+
+    return total - 2 > 1 && isAuto
+  }
+
   /**
    * 自动播放
    *
@@ -140,8 +147,6 @@ export default class Carousel extends React.Component<Props, State> {
    * @param x
    */
   private setSize(x?: number) {
-    console.log(this.frameRef.current, '~~~~~~~~')
-
     const { width } = this.frameRef.current!.getBoundingClientRect()
     const len = React.Children.count(this.props.children)
     const total = len + 2
@@ -260,12 +265,13 @@ export default class Carousel extends React.Component<Props, State> {
    * @memberof Carousel
    */
   private onTouchEnd() {
-    this.autoPlay()
+    this.shouldAutoPlay && this.autoPlay()
     const { moveDeltaX, slideItemWidth, direction } = this.state
     const threshold = slideItemWidth * THRESHOLD_PERCENTAGE
     const moveToNext = Math.abs(moveDeltaX) > threshold
 
     if (moveToNext) {
+      this.props.beforeChange && this.props.beforeChange()
       this.handleSwipe(direction!)
     } else {
       this.handleMisoperation()
@@ -273,7 +279,7 @@ export default class Carousel extends React.Component<Props, State> {
   }
 
   /**
-   * 图片轮播
+   * 图片轮播换位
    *
    * @private
    * @memberof Carousel
@@ -282,8 +288,6 @@ export default class Carousel extends React.Component<Props, State> {
     const { children, speed } = this.props
     const { slideItemWidth, currentIndex, translateX } = this.state
     const count = React.Children.count(children)
-
-    this.props.beforeChange && this.props.beforeChange()
 
     let endValue: number
     let newIndex: number

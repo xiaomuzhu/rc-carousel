@@ -32,7 +32,9 @@
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jest-styled-components": "^6.3.1"
+  },
   "peerDependencies": {
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
@@ -53,6 +55,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-to-json": "^3.3.5",
     "husky": "^1.1.4",
     "jest": "^23.6.0",
     "jest-css-modules-transform": "^2.1.1",
