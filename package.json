@@ -1,10 +1,10 @@
 {
-  "name": "rc-carousel",
-  "description": "create-component",
+  "name": "@xiaomuzhu/rc-carousel",
+  "description": "carousel for react",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xiaomuzhu/create-component"
+    "url": "https://github.com/xiaomuzhu/rc-carousel"
   },
   "author": "xiaomuzhu",
   "license": "MIT",
